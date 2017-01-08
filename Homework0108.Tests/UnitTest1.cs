@@ -19,6 +19,17 @@ namespace Homework0108.Tests
 
             CollectionAssert.AreEqual(expected, actual);
         }
+        [TestMethod]
+        public void Test_Products使用測試資料四筆一組取Revenue總和應為_50_66_60()
+        {
+            var products = GetTestProduct();
+
+            int[] expected = new int[] { 50,66,60 };
+
+            int[] actual = products.GroupSum(x => x.Revenue, 4);
+
+            CollectionAssert.AreEqual(expected, actual);
+        }
 
         public List<Product> GetTestProduct()
         {
@@ -53,16 +64,15 @@ namespace Homework0108.Tests
     {
         public static int[] GroupSum(this List<Product> products, Func<Product, int> selector, int group)
         {
-            var tmp = products.Select(selector)
-                .Select((value, index) => new
+            var result = products.Select(selector) //取得資料
+                .Select((value, index) => new  //根據Group條件群組
                 {
                     Value = value,
                     GroupId = index / group
-                });
-
-            var result = tmp
+                })
                 .GroupBy(x => x.GroupId)
-                .Select(x => x.Sum(y => y.Value)).ToArray();
+                .Select(x => x.Sum(y => y.Value)) //加總
+                .ToArray();
 
             return result;
         }
