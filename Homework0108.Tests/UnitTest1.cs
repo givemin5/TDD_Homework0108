@@ -30,6 +30,27 @@ namespace Homework0108.Tests
 
             CollectionAssert.AreEqual(expected, actual);
         }
+        [TestMethod]
+        public void Test_使用People測試資料四筆一組取Age總和應為_4_8()
+        {
+            var peoples = new List<People>
+            {
+                new People { Age = 1 },
+                new People { Age = 1 },
+                new People { Age = 1 },
+                new People { Age = 1 },
+                new People { Age = 2 },
+                new People { Age = 2 },
+                new People { Age = 2 },
+                new People { Age = 2 },
+            };
+
+            int[] expected = new int[] { 4,8 };
+
+            int[] actual = peoples.GroupSum(x => x.Age, 4);
+
+            CollectionAssert.AreEqual(expected, actual);
+        }
 
         public List<Product> GetTestProduct()
         {
@@ -50,7 +71,10 @@ namespace Homework0108.Tests
         }
     }
 
-
+    public class People
+    {
+        public int Age { get; set; }
+    }
 
     public class Product
     {
@@ -62,7 +86,7 @@ namespace Homework0108.Tests
 
     public static class ListExtension
     {
-        public static int[] GroupSum(this List<Product> products, Func<Product, int> selector, int group)
+        public static int[] GroupSum<T>(this List<T> products, Func<T, int> selector, int group)
         {
             var result = products.Select(selector) //取得資料
                 .Select((value, index) => new  //根據Group條件群組
