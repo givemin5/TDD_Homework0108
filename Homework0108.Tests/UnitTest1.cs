@@ -86,9 +86,9 @@ namespace Homework0108.Tests
 
     public static class ListExtension
     {
-        public static int[] GroupSum<T>(this List<T> products, Func<T, int> selector, int group)
+        public static int[] GroupSum<T>(this List<T> source, Func<T, int> selector, int group)
         {
-            var result = products.Select(selector) //取得資料
+            var result = source.Select(selector) //取得資料
                 .Select((value, index) => new  //根據Group條件群組
                 {
                     Value = value,
