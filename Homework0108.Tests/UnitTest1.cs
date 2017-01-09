@@ -85,13 +85,13 @@ namespace Homework0108.Tests
 
     public static class ListExtension
     {
-        public static IEnumerable<int> GroupSum<T>(this List<T> source, Func<T, int> selector, int group)
+        public static IEnumerable<int> GroupSum<T>(this List<T> source, Func<T, int> selector, int groupSize)
         {
             var index = 0;
             while (index < source.Count)
             {
-                yield return source.Skip(index).Take(group).Sum(selector);
-                index += group;
+                yield return source.Skip(index).Take(groupSize).Sum(selector);
+                index += groupSize;
             }
         }
     }
