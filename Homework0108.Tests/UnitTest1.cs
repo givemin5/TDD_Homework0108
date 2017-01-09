@@ -11,22 +11,22 @@ namespace Homework0108.Tests
         [TestMethod]
         public void Test_Products使用測試資料三筆一組取Cost總和應為6_15_24_21()
         {
-            var products = GetTestProduct();
+            var products = GetProducts();
 
-            int[] expected = new int[] { 6, 15, 24, 21 };
+            List<int> expected = new List<int> { 6, 15, 24, 21 };
 
-            int[] actual = products.GroupSum(x => x.Cost, 3);
+            List<int> actual = products.GroupSum(x => x.Cost, 3).ToList();
 
             CollectionAssert.AreEqual(expected, actual);
         }
         [TestMethod]
         public void Test_Products使用測試資料四筆一組取Revenue總和應為_50_66_60()
         {
-            var products = GetTestProduct();
+            var products = GetProducts();
 
-            int[] expected = new int[] { 50,66,60 };
+            List<int> expected = new List<int> { 50,66,60 };
 
-            int[] actual = products.GroupSum(x => x.Revenue, 4);
+            List<int> actual = products.GroupSum(x => x.Revenue, 4).ToList();
 
             CollectionAssert.AreEqual(expected, actual);
         }
@@ -45,14 +45,13 @@ namespace Homework0108.Tests
                 new People { Age = 2 },
             };
 
-            int[] expected = new int[] { 4,8 };
+            List<int> expected = new List<int> { 4,8 };
 
-            int[] actual = peoples.GroupSum(x => x.Age, 4);
-
+            List<int> actual = peoples.GroupSum(x => x.Age, 4).ToList();
             CollectionAssert.AreEqual(expected, actual);
         }
 
-        public List<Product> GetTestProduct()
+        private List<Product> GetProducts()
         {
             return new List<Product> {
                 new Product{Id=1   ,Cost=1   ,Revenue=11, SellPrice=21 },
@@ -86,19 +85,14 @@ namespace Homework0108.Tests
 
     public static class ListExtension
     {
-        public static int[] GroupSum<T>(this List<T> source, Func<T, int> selector, int group)
+        public static IEnumerable<int> GroupSum<T>(this List<T> source, Func<T, int> selector, int group)
         {
-            var result = source.Select(selector) //取得資料
-                .Select((value, index) => new  //根據Group條件群組
-                {
-                    Value = value,
-                    GroupId = index / group
-                })
-                .GroupBy(x => x.GroupId)
-                .Select(x => x.Sum(y => y.Value)) //加總
-                .ToArray();
-
-            return result;
+            var index = 0;
+            while (index < source.Count)
+            {
+                yield return source.Skip(index).Take(group).Sum(selector);
+                index += group;
+            }
         }
     }
 }
